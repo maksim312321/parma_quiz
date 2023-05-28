@@ -1,4 +1,11 @@
-import { createApp } from 'vue'
 import App from './App.vue'
+import { Button, Popup } from 'vant';  
+import { createApp } from 'vue'
+import router from './router/router.js'
 
-createApp(App).mount('#app')
+import 'vant/lib/index.css';
+createApp(App)
+    .use(Button)
+    .use(Popup)
+    .use(router)
+    .mount('#app');
