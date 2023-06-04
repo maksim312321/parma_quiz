@@ -1,3 +1,7 @@
+using webapi.Infrastructure.DatabaseUtils;
+using webapi.Services;
+using webapi.Services.Implementations;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddScoped<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
+builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
