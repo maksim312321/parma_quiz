@@ -1,7 +1,6 @@
-<template>
+﻿<template>
     <div>
         <div> {{ title }} </div>
-        <van-button type="primary">Primary</van-button>
     </div>
 </template>
 
@@ -13,4 +12,4 @@
             title: String,
         },
     });
-</script>
+</script>   

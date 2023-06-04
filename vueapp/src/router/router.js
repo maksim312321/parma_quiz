@@ -1,4 +1,4 @@
-import MainPage from '../pages/MainPage'
+﻿import MainPage from '../pages/MainPage'
 import LoginPage from '../pages/LoginPage'
 import { createRouter, createWebHistory } from 'vue-router'
 

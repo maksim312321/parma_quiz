@@ -1,63 +1,63 @@
-<template>
-    <div>
-        <div v-if="loading">Loading...</div>
-        <div class="quiz__cards"
-             v-else>
-            <QuizCard :title="testData"></QuizCard>
-            <QuizCard :title="testData"></QuizCard>
-            <QuizCard :title="testData"></QuizCard>
+﻿<template>
+    <div class="container">
+        <div v-if="infoBlocks">
+            <div class="block-info__button"
+                 v-for="infoBlock in infoBlocks"
+                 @click="selectedInfoBlock = infoBlock">
+                {{ infoBlock.title }}
+            </div>
         </div>
-        <van-button @click="showPopup=!showPopup" type="primary">Show popup</van-button>
-        <van-popup v-model:show="showPopup">
-            <QuizCard :title="testData"></QuizCard>
-        </van-popup>
+        <div>
+            <div v-if="selectedInfoBlock">
+                <h3>{{ selectedInfoBlock.subtitle }}</h3>
+    
+                {{ selectedInfoBlock.content }}
+            </div>
+            <div v-else>
+                <h3>Главный дефолтный экран</h3>
+            </div>
+        </div>
     </div>
 </template>
 
 <script lang="js">
     import { defineComponent } from 'vue';
-    import QuizCard from '../components/QuizCard.vue';
 
     export default defineComponent({
-        components: {
-            QuizCard
-        },
         data() {
             return {
-                loading: false,
-                post: null,
-                testData: "testString",
-                showPopup: false,
+                infoBlocks: null,
+                selectedInfoBlock: null,
             };
         },
         created() {
-            this.fetchData();
+            this.infoBlocks = JSON.parse('[{"title":"БЛОКИ С ИНФОРМАЦИЕЙ","subtitle":"Как получить все справки этого мира в компании?","content":"Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то воттак-то"},{"title":"БЛОКИ С ИНФОРМАЦИЕЙ","subtitle":"Как получить все справки этого мира в компании?","content":"Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то воттак-то"},{"title":"БЛОКИ С ИНФОРМАЦИЕЙ","subtitle":"Как получить все справки этого мира в компании?","content":"Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то воттак-то"},{"title":"БЛОКИ С ИНФОРМАЦИЕЙ","subtitle":"Как получить все справки этого мира в компании?","content":"Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то воттак-то"},{"title":"БЛОКИ С ИНФОРМАЦИЕЙ","subtitle":"Как получить все справки этого мира в компании?","content":"Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то воттак-то"},{"title":"БЛОКИ С ИНФОРМАЦИЕЙ","subtitle":"Как получить все справки этого мира в компании?","content":"Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то вот-так-то Так-то воттак-то"}]');
         },
-        watch: {
-            '$route': 'fetchData'
-        },
-        methods: {
-            fetchData() {
-                this.post = null;
-                this.loading = true;
-
-                fetch('weatherforecast')
-                    .then(r => r.json())
-                    .then(json => {
-                        this.post = json;
-                        this.loading = false;
-                        return;
-                    });
-            }
-        },
+        methods: {},
     });
 </script>
 
 <style>
-    .quiz__cards {
-        width: 1070px;
+    .container {
+        width: 80%;
         margin: 0 auto;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 20% 80%;
+        margin-top: 80px;
+        grid-gap: 30px;
+    }
+
+    .block-info__button {
+        background: #E9ECEE;
+        text-align: center;
+        cursor: pointer;
+        font-family: 'Montserrat';
+        font-weight: 800;
+        padding: 13px;
+        margin-top: 11px;
+    }
+
+    .block-info__button:first-child {
+        margin-top: 0;
     }
 </style>

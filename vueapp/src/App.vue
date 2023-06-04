@@ -1,25 +1,30 @@
-<template>
+﻿<template>
     <div>
-        <van-button type="primary" to="/">Main</van-button>
-        <van-button type="primary" to="/login">login</van-button>
+        <SiteHeader :user-name="userName"></SiteHeader>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
+    import SiteHeader from './components/SiteHeader.vue';
 
-export default {
-  name: 'App',
-}
+    export default {
+        name: 'App',
+        components: {
+            SiteHeader,
+        },
+        data() {
+            return {
+                userName: 'Иван Иванович',
+            }
+        },
+    }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+
+    body {
+        font-family: 'Montserrat';
+    }
 </style>
