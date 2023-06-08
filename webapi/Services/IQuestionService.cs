@@ -7,7 +7,7 @@ public interface IQuestionService
 {
     public Task<QuestionDto> GetQuestionByIdAsync(int questionId);
 
-  //  public Task<List<QuestionDto>> GetAllQuestionsAsync();
+    public Task<List<QuestionDto>> GetAllQuestionsAsync();
 
     public Task AddQuestionAsync(QuestionDto question);
 }
