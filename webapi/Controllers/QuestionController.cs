@@ -20,11 +20,11 @@ public class QuestionController : ControllerBase
         _questionService = questionService;
     }
 
-    //[HttpGet("all")]
-    //public async Task<List<QuestionDto>> GetQuestions()
-    //{
-    //    //return await _questionService.GetAllQuestionsAsync();
-    //}
+    [HttpGet("all")]
+    public async Task<List<QuestionDto>> GetQuestions()
+    {
+        return await _questionService.GetAllQuestionsAsync();
+    }
 
     [HttpGet("{questionId}")]
     public async Task<QuestionDto> GetQuestion(int questionId)
