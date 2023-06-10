@@ -1,12 +1,12 @@
 ﻿<template>
     <div class="container container__main-page">
-        <!--<div v-if="infoBlocks">
+        <div v-if="infoBlocks">
             <div class="block-info__button"
                  v-for="infoBlock in infoBlocks"
                  @click="selectedInfoBlock = infoBlock">
                 {{ infoBlock.title }}
             </div>
-        </div>-->
+        </div>
         <div>
             <div v-if="selectedInfoBlock">
                 <h3>{{ selectedInfoBlock.subtitle }}</h3>
@@ -16,9 +16,9 @@
             <div v-else>
                 <h3>Главный дефолтный экран</h3>
             </div>
-           <router-link to="/quiz"> 
-            <button>Начать опрос</button> 
-           </router-link>
+            <router-link to="/quiz">
+                <van-button color="#EC1C24" type="primary">Начать опрос</van-button>
+            </router-link>
         </div>
     </div>
 </template>
@@ -53,6 +53,7 @@
         display: grid;
         grid-template-columns: 20% 80%;
         grid-gap: 30px;
+        margin-top: 80px;
     }
 
     .block-info__button {
