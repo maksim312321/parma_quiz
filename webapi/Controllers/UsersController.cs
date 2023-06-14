@@ -1,8 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using webapi.Infrastructure;
 using webapi.Infrastructure.Dtos;
 using webapi.Infrastructure.Models;
+using webapi.Services;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace webapi.Controllers;
@@ -20,24 +22,29 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     //[AuthentificationPermission(Permissions = "UserManagement")]
-    public Task<List<UserDto>> GetAllUsersAsync(CancellationToken cancellationToken = default)
-        => _userService.GetUsersAsync(cancellationToken);
+    public Task<List<UserDto>?> GetAllUsersAsync()
+        => _userService.GetUsersAsync();
 
     [HttpGet("{userId}")]
     public async Task<UserDto> GetUserById(int userId) =>
         await _userService.GetUserByIdAsync(userId);
-    
 
-    //[HttpPost]
-    ////[AuthentificationPermission(Permissions = "UserManagement")]
-    //public async Task<UserDto> AddUserAsync(UserItem user, CancellationToken cancellationToken = default)
-    //{
-    //    //if (await _userService.IsUserExist(user.UserLogin))
-    //    //    throw new UserAlreadyExistException();
 
-    //    return await _userService.AddUserAsync(user, cancellationToken);
-    //}
+    [HttpPost]
+    //[AuthentificationPermission(Permissions = "UserManagement")]
+    public async Task<int> AddUserAsync(UserDto user)
+    {
+        //if (await _userService.IsUserExist(user.UserLogin))
+        //    throw new UserAlreadyExistException();
 
+        return await _userService.AddUserAsync(user);
+    }
+
+    [HttpGet("checkexists/{userLogin}")]
+    public async Task<bool> IsUserExist(string userLogin)
+    {
+        return await _userService.IsUserExist(userLogin);
+    }
     //[HttpPut("{id}")]
     ////[AuthentificationPermission(Permissions = "UserManagement")]
     //public Task ChangeUserAsync(int id, [FromBody] UserChangeModel changes, CancellationToken cancellationToken = default)

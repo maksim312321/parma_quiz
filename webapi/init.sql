@@ -10,7 +10,8 @@ create table difficults (
 
 create table answers (
     answer_id serial PRIMARY KEY,
-    answer_text varchar
+    answer_text varchar,
+    user_id int4 NOT NULL
 );
 
 create table users (
@@ -41,8 +42,13 @@ create table user_answers (
     user_answer_id serial PRIMARY KEY,
     user_answer_text varchar,
     answer_id integer,
-    CONSTRAINT answer_id_fkey FOREIGN KEY (answer_id) REFERENCES answers(answer_id)
+    CONSTRAINT answer_id_fkey FOREIGN KEY (answer_id) REFERENCES answers(answer_id),
+	CONSTRAINT user_answers_fk FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
+INSERT INTO roles (role_id, role_name) VALUES(1, 'User');
+INSERT INTO roles (role_id, role_name) VALUES(2, 'Admin');
+
 
 INSERT INTO difficults (difficult_id, difficult) VALUES(1, 'Easy');
 INSERT INTO difficults (difficult_id, difficult) VALUES(2, 'Medium');
@@ -59,3 +65,6 @@ INSERT INTO questions (question_text,
 INSERT INTO questions
 (question_id, question_text, question_image, question_correct_answer_id, question_answer_ids, is_open, question_difficult_id, question_video_link)
 VALUES(2, 'В каком мессенджере следует общаться по рабочим вопросам?', NULL, 3, '{1,2,3,4}', false, 1, NULL);
+
+ALTER TABLE user_answers ADD user_id int4 NOT NULL;
+ALTER TABLE user_answers ADD CONSTRAINT user_answers_fk FOREIGN KEY (user_id) REFERENCES users(user_id);

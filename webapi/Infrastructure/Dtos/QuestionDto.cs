@@ -1,4 +1,5 @@
-﻿using webapi.Enums;
+﻿using System.Text.Json.Serialization;
+using webapi.Enums;
 
 namespace webapi.Infrastructure.Dtos;
 
@@ -8,6 +9,7 @@ public class QuestionDto
 
     public int Id { get; set; }
 
+    [JsonConverter(typeof(JsonToByteArrayConverter))]
     public byte[]? Image { get; set; }
 
     public AnswerDto? CorrectAnswer { get; set; }

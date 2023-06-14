@@ -4,17 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.Xml;
 using webapi.Infrastructure.DatabaseUtils;
 using webapi.Infrastructure.Dtos;
+using System.Web.Http.Cors;
 using webapi.Services;
 using webapi.Services.Implementations;
 
 namespace webapi.Controllers;
 
 [ApiController]
+[EnableCors(origins: "*", headers: "*", methods: "*")]
 [Route("[controller]")]
 public class QuestionController : ControllerBase
 {
     private readonly IQuestionService _questionService;
 
+    
     public QuestionController(IQuestionService questionService)
     {
         _questionService = questionService;
@@ -30,5 +33,11 @@ public class QuestionController : ControllerBase
     public async Task<QuestionDto> GetQuestion(int questionId)
     {
         return await _questionService.GetQuestionByIdAsync(questionId);
+    }
+
+    [HttpPost]
+    public async Task<int> AddNewQuestion(QuestionDto newQuestionDto)
+    {
+        return await _questionService.AddQuestionAsync(newQuestionDto);
     }
 }

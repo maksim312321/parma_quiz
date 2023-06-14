@@ -1,4 +1,5 @@
-﻿using webapi.Infrastructure.DatabaseUtils;
+﻿using webapi.Infrastructure;
+using webapi.Infrastructure.DatabaseUtils;
 using webapi.Infrastructure.Dtos;
 using webapi.Infrastructure.Models;
 
@@ -12,19 +13,10 @@ public class UserService : IUserService
     {
         _repository = repository;
     }
-    public async Task<List<UserDto>> GetUsersAsync(
-       CancellationToken cancellationToken = default)
+    public async Task<List<UserDto>?> GetUsersAsync()
     {
-        var usersQuery = string.Format(@"select u.user_id as UserId,
-											u.user_password as UserPassword,
-										   	u.user_name as UserName,
-										   	u.user_surname as UserSurname,
-										  	u.user_login as UserLogin,
-										  	u.user_role_id as RoleId,
-                                           	from users u");
-
         var users = (await _repository.QueryAsync<UserModel>(
-            sql: usersQuery));
+            sql: SqlFiles.GetAllUsers));
 
         if (users is null)
             return null;
@@ -41,20 +33,13 @@ public class UserService : IUserService
     }
 
     public async Task<UserDto> GetUserByIdAsync(
-        int id,
-        CancellationToken cancellationToken = default)
+        int id)
     {
-        var usersQuery = string.Format(@"select u.user_id as UserId,
-											u.user_password as UserPassword,
-										   	u.user_name as UserName,
-										   	u.user_surname as UserSurname,
-										  	u.user_login as UserLogin,
-										  	u.user_role_id as RoleId,
-                                           	from users u
-                                            where u.user_id = {0}", id);
-
-        var user = (await _repository.QueryAsync<UserModel>(
-            sql: usersQuery)).FirstOrDefault();
+      
+        var user = (await _repository.QueryAsync<UserModel>(sql: SqlFiles.GetUserById, param: new 
+            {
+                UserId = id
+            })).FirstOrDefault();
 
         if (user is null)
             return null;
@@ -68,5 +53,31 @@ public class UserService : IUserService
             Role = user.RoleId,
             Name = user.UserName
         };
+    }
+
+    public async Task<int> AddUserAsync(UserDto user)
+    {
+        ArgumentNullException.ThrowIfNull(user);
+        return (await _repository.QueryAsync<int>(
+            sql: SqlFiles.AddNewUser,
+            param: new
+            {
+                UserPassword = user.Password,
+                UserLogin = user.Login,
+                UserSurname = user.Surname,
+                UserName = user.Name,
+                UserRoleId = (int)user.Role
+            })).FirstOrDefault(-1);
+    }
+
+    public async Task<bool> IsUserExist(string userLogin)
+    {
+        var currentUser = (await _repository.QueryAsync<UserModel>(
+            sql: SqlFiles.GetUserByLogin,
+            param: new
+            {
+                UserLogin = userLogin
+            })).FirstOrDefault();
+        return currentUser is not null;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using webapi.Infrastructure.Dtos;
-using webapi.Infrastructure.Models;
 
 namespace webapi.Services;
 
@@ -9,5 +8,5 @@ public interface IQuestionService
 
     public Task<List<QuestionDto>> GetAllQuestionsAsync();
 
-    public Task AddQuestionAsync(QuestionDto question);
+    public Task<int> AddQuestionAsync(QuestionDto question);
 }
