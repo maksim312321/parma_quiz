@@ -136,7 +136,8 @@ namespace webapi.Infrastructure {
         ///    @UserAnswerText,
         ///    @AnswerId,
         ///    @UserId
-        ///  ).
+        ///  )
+        ///  RETURNING user_answer_id.
         /// </summary>
         internal static string AddNewUserAnswer {
             get {
@@ -233,9 +234,9 @@ namespace webapi.Infrastructure {
         ///									from answers a
         ///									where a.answer_id = ANY(@AnswerIds).
         /// </summary>
-        internal static string GetAnswerByIds {
+        internal static string GetAnswersByIds {
             get {
-                return ResourceManager.GetString("GetAnswerByIds", resourceCulture);
+                return ResourceManager.GetString("GetAnswersByIds", resourceCulture);
             }
         }
         

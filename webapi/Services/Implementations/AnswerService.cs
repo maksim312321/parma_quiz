@@ -40,7 +40,7 @@ public class AnswerService : IAnswerService
             sql: SqlFiles.GetAnswerByIds,
             param: new
             {
-                AnswerIds = id
+                AnswerIds =new int[] { id }
             })).FirstOrDefault();
         if (answerModel is null)
             return null;

@@ -151,8 +151,8 @@
   <data name="GetAllUsers" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>SQL\GetAllUsers.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
-  <data name="GetAnswerByIds" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>SQL\GetAnswerByIds.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  <data name="GetAnswersByIds" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>SQL\GetAnswersByIds.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="GetQuestionById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>SQL\GetQuestionById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>

@@ -33,19 +33,10 @@ public class QuestionService : IQuestionService
 
         if (!question.IsOpen)
         {
-            var answerIds = string.Join(",", question.QuestionAnswerIds) + "," + question.CorrectAnswerId;
+            var answerIds = question.QuestionAnswerIds.ToList();
 
-            var answersModels = await _repository.QueryAsync<AnswerModel>(
-                sql: SqlFiles.GetAnswerByIds,
-                param: new
-                {
-                    AnswerIds = answerIds,
-                });
-            answerDtos = answersModels.Select(a => new AnswerDto()
-            {
-                Id = a.AnswerId,
-                Text = a.AnswerText
-            }).ToList();
+            answerIds.Add(question.CorrectAnswerId);
+            answerDtos = await _answerService.GetAnswerDtosAsync(answerIds.Distinct().ToList()) ?? new List<AnswerDto>(0);
         }
 
         var dto = new QuestionDto
@@ -76,17 +67,7 @@ public class QuestionService : IQuestionService
         answerIds.AddRange(notOpenQuestions.Select(q => q.CorrectAnswerId));
         if (answerIds.Count != 0)
         {
-            var answersModels = await _repository.QueryAsync<AnswerModel>(
-                sql: SqlFiles.GetAnswerByIds,
-                param: new
-                {
-                    AnswerIds = answerIds.Distinct().ToArray()
-                });
-            answerDtos = answersModels.Select(a => new AnswerDto()
-            {
-                Id = a.AnswerId,
-                Text = a.AnswerText
-            }).ToList();
+            answerDtos = await _answerService.GetAnswerDtosAsync(answerIds.Distinct().ToList()) ?? new List<AnswerDto>(0);
         }
         var questionDtos = questions.Select(question => new QuestionDto
         {
