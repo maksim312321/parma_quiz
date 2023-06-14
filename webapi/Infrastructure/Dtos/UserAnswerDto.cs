@@ -1,6 +1,6 @@
-﻿namespace webapi.Infrastructure.Models;
+﻿namespace webapi.Infrastructure.Dtos;
 
-public class UserAnswerModel
+public class UserAnswerDto
 {
     public int UserAnswerId { get; set; }
 

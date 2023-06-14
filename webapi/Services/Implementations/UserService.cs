@@ -1,4 +1,8 @@
-﻿using webapi.Infrastructure;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
+using System.Text;
+using webapi.Infrastructure;
 using webapi.Infrastructure.DatabaseUtils;
 using webapi.Infrastructure.Dtos;
 using webapi.Infrastructure.Models;
@@ -58,6 +62,8 @@ public class UserService : IUserService
     public async Task<int> AddUserAsync(UserDto user)
     {
         ArgumentNullException.ThrowIfNull(user);
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 14);
+       
         return (await _repository.QueryAsync<int>(
             sql: SqlFiles.AddNewUser,
             param: new
@@ -79,5 +85,21 @@ public class UserService : IUserService
                 UserLogin = userLogin
             })).FirstOrDefault();
         return currentUser is not null;
+    }
+
+    public async Task<bool> UpdateUserAsync(UserDto user)
+    {
+        var userId = (await _repository.QueryAsync<int>(
+            sql: SqlFiles.UpdateUserById,
+            param: new
+            {
+                UserId = user.Id,
+                UserPassword = user.Password,
+                UserLogin = user.Login,
+                UserSurname = user.Surname,
+                UserName = user.Name,
+                UserRoleId = (int)user.Role
+            })).FirstOrDefault(-1);
+        return userId == user.Id;
     }
 }

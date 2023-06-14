@@ -24,9 +24,14 @@ public class AnswerService : IAnswerService
             })).FirstOrDefault();
     }
 
-    public Task DeleteAnswerByIdAsync(int id)
+    public async Task DeleteAnswerByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        await _repository.ExecuteAsync(
+            sql: SqlFiles.DeleteAnswerById,
+            param: new
+            {
+                AnswerId = id
+            });
     }
 
     public async Task<AnswerDto?> GetAnswerByIdAsync(int id)
@@ -54,6 +59,20 @@ public class AnswerService : IAnswerService
             {
                 AnswerIds = answerIds
             }));
+        if (answerModels is null)
+            return null;
+        return answerModels.Select(m => new AnswerDto
+        {
+            Id = m.AnswerId,
+            Text = m.AnswerText
+        }).ToList();
+    }
+
+    public async Task<List<AnswerDto>?> GetAllAnswerDtosAsync()
+    {
+        var answerModels = await _repository.QueryAsync<AnswerModel>(
+            sql: SqlFiles.GetAllAnswers);
+           ;
         if (answerModels is null)
             return null;
         return answerModels.Select(m => new AnswerDto

@@ -1,0 +1,1 @@
+DELETE FROM answers where answer_id = @AnswerId

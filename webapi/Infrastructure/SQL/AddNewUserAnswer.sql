@@ -1,9 +1,12 @@
 INSERT INTO user_answers(
     user_answer_text,
-    answer_id
+    answer_id,
+    user_id
 ) 
 VALUES 
   (
     @UserAnswerText,
-    @AnswerId
+    @AnswerId,
+    @UserId
   )
+  RETURNING user_answer_id

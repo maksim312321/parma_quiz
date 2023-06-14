@@ -16,7 +16,6 @@ namespace webapi.Controllers;
 public class QuestionController : ControllerBase
 {
     private readonly IQuestionService _questionService;
-
     
     public QuestionController(IQuestionService questionService)
     {
@@ -24,13 +23,13 @@ public class QuestionController : ControllerBase
     }
 
     [HttpGet("all")]
-    public async Task<List<QuestionDto>> GetQuestions()
+    public async Task<List<QuestionDto>?> GetQuestions()
     {
         return await _questionService.GetAllQuestionsAsync();
     }
 
     [HttpGet("{questionId}")]
-    public async Task<QuestionDto> GetQuestion(int questionId)
+    public async Task<QuestionDto?> GetQuestion(int questionId)
     {
         return await _questionService.GetQuestionByIdAsync(questionId);
     }
@@ -39,5 +38,11 @@ public class QuestionController : ControllerBase
     public async Task<int> AddNewQuestion(QuestionDto newQuestionDto)
     {
         return await _questionService.AddQuestionAsync(newQuestionDto);
+    }
+
+    [HttpDelete("{questionId}")]
+    public async Task DeleteQuestionById(int questionId)
+    {
+        await _questionService.DeleteQuestionById(questionId);
     }
 }

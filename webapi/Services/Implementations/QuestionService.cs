@@ -140,4 +140,13 @@ public class QuestionService : IQuestionService
                 QuestionVideoLink = question.VideoLink
             })).FirstOrDefault();
     }
+
+    public async Task DeleteQuestionById(int questionId)
+    {
+        await _repository.ExecuteAsync(sql: SqlFiles.DeleteQuestionById,
+            param: new
+            {
+                QuestionId = questionId
+            });
+    }
 }

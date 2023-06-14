@@ -128,12 +128,14 @@ namespace webapi.Infrastructure {
         /// <summary>
         ///   Ищет локализованную строку, похожую на INSERT INTO user_answers(
         ///    user_answer_text,
-        ///    answer_id
+        ///    answer_id,
+        ///    user_id
         ///) 
         ///VALUES 
         ///  (
         ///    @UserAnswerText,
-        ///    @AnswerId
+        ///    @AnswerId,
+        ///    @UserId
         ///  ).
         /// </summary>
         internal static string AddNewUserAnswer {
@@ -143,11 +145,40 @@ namespace webapi.Infrastructure {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE FROM answers where answer_id = @AnswerId.
+        /// </summary>
+        internal static string DeleteAnswerById {
+            get {
+                return ResourceManager.GetString("DeleteAnswerById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на DELETE from questions where question_id = @QuestionId.
         /// </summary>
         internal static string DeleteQuestionById {
             get {
                 return ResourceManager.GetString("DeleteQuestionById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на DELETE FROM users where user_id = @UserId.
+        /// </summary>
+        internal static string DeleteUserById {
+            get {
+                return ResourceManager.GetString("DeleteUserById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на select a.answer_id as AnswerId,
+        ///											a.answer_text as AnswerText									   
+        ///									from answers a.
+        /// </summary>
+        internal static string GetAllAnswers {
+            get {
+                return ResourceManager.GetString("GetAllAnswers", resourceCulture);
             }
         }
         
@@ -255,6 +286,23 @@ namespace webapi.Infrastructure {
         internal static string GetUserByLogin {
             get {
                 return ResourceManager.GetString("GetUserByLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на UPDATE users
+        ///SET user_password=@UserPassword,
+        ///    user_name=@UserName,
+        ///    user_surname=@UserSurname,
+        ///    user_login=@UserLogin,
+        ///    user_role_id=@UserRoleId
+        ///WHERE user_id= @UserId
+        ///RETURNING user_id
+        ///.
+        /// </summary>
+        internal static string UpdateUserById {
+            get {
+                return ResourceManager.GetString("UpdateUserById", resourceCulture);
             }
         }
     }

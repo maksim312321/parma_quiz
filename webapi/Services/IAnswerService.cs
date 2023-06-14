@@ -11,4 +11,6 @@ public interface IAnswerService
     public Task<AnswerDto?> GetAnswerByIdAsync(int id);
 
     public Task<List<AnswerDto>?> GetAnswerDtosAsync(IReadOnlyCollection<int> answerIds);
+
+    public Task<List<AnswerDto>?> GetAllAnswerDtosAsync();
 }
