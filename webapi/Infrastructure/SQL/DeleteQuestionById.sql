@@ -1,0 +1,1 @@
+DELETE from questions where question_id = @QuestionId

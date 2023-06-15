@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using webapi.Infrastructure;
 using webapi.Infrastructure.DatabaseUtils;
 using webapi.Infrastructure.Dtos;
 using webapi.Infrastructure.Models;
@@ -8,29 +8,23 @@ namespace webapi.Services.Implementations;
 public class QuestionService : IQuestionService
 {
     private readonly IRepository _repository;
-    private readonly IDatabaseConnectionFactory _dbConnectionFactory;
 
-    public QuestionService(IRepository repository, IDatabaseConnectionFactory databaseConnectionFactory)
+    private readonly IAnswerService _answerService;
+
+    public QuestionService(IRepository repository, IAnswerService answerService)
     {
         _repository = repository;
-        _dbConnectionFactory = databaseConnectionFactory;
+        _answerService = answerService;
     }
 
-    public async Task<QuestionDto> GetQuestionByIdAsync(int questionId)
+    public async Task<QuestionDto?> GetQuestionByIdAsync(int questionId)
     {
-        var questionQuery = string.Format(@"select q.question_id as QuestionId,
-											q.question_text as QuestionText,
-										   	q.question_image as QuestionImage,
-										   	q.question_correct_answer_id as CorrectAnswerId,
-										  	q.question_answer_ids as QuestionAnswerIds,
-										  	q.is_open as IsOpen,
-                                            q.question_difficult_id as QuestionDifficultId,
-										   	q.question_video_link as QuestionVideoLink
-									from questions q 
-									where q.question_id = {0}", questionId);
-
         var question = (await _repository.QueryAsync<QuestionModel>(
-            sql: questionQuery)).FirstOrDefault();
+            sql: SqlFiles.GetQuestionById,
+            param: new
+            {
+                QuestionId = questionId
+            })).FirstOrDefault();
 
         if (question is null)
             return null;
@@ -39,19 +33,10 @@ public class QuestionService : IQuestionService
 
         if (!question.IsOpen)
         {
-            var answerIds = string.Join(",", question.QuestionAnswerIds) + "," + question.CorrectAnswerId;
+            var answerIds = question.QuestionAnswerIds.ToList();
 
-            var answerQuerry = string.Format(@"select a.answer_id as AnswerId,
-											a.answer_text as AnswerText,										   
-									from answers a
-									where a.answer_id in ({0})", answerIds);
-            var answersModels = await _repository.QueryAsync<AnswerModel>(
-                sql: answerQuerry);
-            answerDtos = answersModels.Select(a => new AnswerDto()
-            {
-                Id = a.AnswerId,
-                Text = a.AnswerText
-            }).ToList();
+            answerIds.Add(question.CorrectAnswerId);
+            answerDtos = await _answerService.GetAnswerDtosAsync(answerIds.Distinct().ToList()) ?? new List<AnswerDto>(0);
         }
 
         var dto = new QuestionDto
@@ -70,18 +55,8 @@ public class QuestionService : IQuestionService
 
     public async Task<List<QuestionDto>?> GetAllQuestionsAsync()
     {
-        var questionsQuery = string.Format(@"select q.question_id as QuestionId,
-           q.question_text as QuestionText,
-           q.question_image as QuestionImage,
-           q.question_correct_answer_id as CorrectAnswerId,
-           q.question_answer_ids as QuestionAnswerIds,
-           q.is_open as IsOpen,
-           q.question_difficult_id as QuestionDifficultId,
-           q.question_video_link as QuestionVideoLink
-         from questions q");
-
         var questions = await _repository.QueryAsync<QuestionModel>(
-         sql: questionsQuery);
+         sql: SqlFiles.GetAllQuestions);
 
         if (questions is null || !questions.Any())
             return null;
@@ -90,21 +65,9 @@ public class QuestionService : IQuestionService
         var notOpenQuestions = questions.Where(q => !q.IsOpen);
         var answerIds = notOpenQuestions.SelectMany(q => q.QuestionAnswerIds).ToList();
         answerIds.AddRange(notOpenQuestions.Select(q => q.CorrectAnswerId));
-        var answerIdsString = string.Join(",", answerIds.Distinct());
-        if (answerIdsString.Length != 0)
+        if (answerIds.Count != 0)
         {
-
-            var answerQuerry = string.Format(@"select a.answer_id as AnswerId,
-                                               a.answer_text as AnswerText             
-                                             from answers a
-                                             where a.answer_id in ({0})", answerIdsString);
-            var answersModels = await _repository.QueryAsync<AnswerModel>(
-                sql: answerQuerry);
-            answerDtos = answersModels.Select(a => new AnswerDto()
-            {
-                Id = a.AnswerId,
-                Text = a.AnswerText
-            }).ToList();
+            answerDtos = await _answerService.GetAnswerDtosAsync(answerIds.Distinct().ToList()) ?? new List<AnswerDto>(0);
         }
         var questionDtos = questions.Select(question => new QuestionDto
         {
@@ -120,8 +83,51 @@ public class QuestionService : IQuestionService
         return questionDtos;
     }
 
-    public async Task AddQuestionAsync(QuestionDto question)
+    public async Task<int> AddQuestionAsync(QuestionDto question)
     {
+        var answerIds = new List<int>();
+        var correctAnswerId = 0;
+        if (!question.IsOpen && question.Answers is not null && question.CorrectAnswer is not null)
+        {
+            foreach (var answerDto in question.Answers)
+            {
+                var answer = _answerService.GetAnswerByIdAsync(answerDto.Id);
+                if (answer is not null)
+                {
+                    answerIds.Add(answer.Id);
+                    continue;
+                }
 
+                var answerId = await _answerService.AddAnswerAsync(answerDto);
+                answerIds.Add(answerId);
+            }
+           
+            if (await _answerService.GetAnswerByIdAsync(question.CorrectAnswer.Id) is not null)
+                correctAnswerId = question.CorrectAnswer.Id;
+            else
+                correctAnswerId = await _answerService.AddAnswerAsync(question.CorrectAnswer);
+        }
+
+        return (await _repository.QueryAsync<int>(
+            sql: SqlFiles.AddNewQuestion,
+            param: new
+            {
+                QuestionText = question.Text,
+                QuestionImage = question.Image,
+                QuestionCorrectAnswerId = correctAnswerId,
+                QuestionAnswerIds = answerIds,
+                question.IsOpen,
+                QuestionDifficultId = question.Difficult,
+                QuestionVideoLink = question.VideoLink
+            })).FirstOrDefault();
+    }
+
+    public async Task DeleteQuestionById(int questionId)
+    {
+        await _repository.ExecuteAsync(sql: SqlFiles.DeleteQuestionById,
+            param: new
+            {
+                QuestionId = questionId
+            });
     }
 }

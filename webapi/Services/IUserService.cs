@@ -1,32 +1,18 @@
-﻿using System;
-using webapi.Infrastructure.Dtos;
-using webapi.Services;
+﻿using webapi.Infrastructure.Dtos;
+
+namespace webapi.Services;
 
 public interface IUserService
 {
-    Task<List<UserDto>> GetUsersAsync(
-        CancellationToken cancellationToken = default);
+    Task<List<UserDto>> GetUsersAsync();
 
-    Task<UserDto> GetUserByIdAsync(
-        int id,
-        CancellationToken cancellationToken = default);
+    Task<UserDto> GetUserByIdAsync(int id);
 
-    //Task<UserItem> GetUserByIdAsync(
-    //    HttpContext httpContext,
-    //    CancellationToken cancellationToken = default);
+    Task<int> AddUserAsync(UserDto user);
 
-    //Task ChangeUserAsync(
-    //    int id,
-    //    UserChangeModel changes,
-    //    CancellationToken cancellationToken = default);
+    Task<bool> IsUserExist(string userLogin);
 
-    //Task<UserViewModel> AddUserAsync(
-    //    UserItem user,
-    //    CancellationToken cancellationToken = default);
-
-    //Task<bool> IsUserExist(
-    //    string userLogin,
-    //    CancellationToken cancellationToken = default);
+    Task<bool> UpdateUserAsync(UserDto user);
 
     //Task<IReadOnlyCollection<string>> GetUserPermissionsByIdAsync(
     //    int id,

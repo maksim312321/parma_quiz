@@ -1,0 +1,4 @@
+select a.answer_id as AnswerId,
+											a.answer_text as AnswerText									   
+									from answers a
+									where a.answer_id = ANY(@AnswerIds)

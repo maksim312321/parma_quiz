@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Infrastructure.Dtos;
-using webapi.Infrastructure.Models;
+using webapi.Services;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace webapi.Controllers;
@@ -20,26 +20,30 @@ public class UsersController : ControllerBase
 
     [HttpGet]
     //[AuthentificationPermission(Permissions = "UserManagement")]
-    public Task<List<UserDto>> GetAllUsersAsync(CancellationToken cancellationToken = default)
-        => _userService.GetUsersAsync(cancellationToken);
+    public async Task<List<UserDto>?> GetAllUsersAsync()
+        => await _userService.GetUsersAsync();
 
     [HttpGet("{userId}")]
     public async Task<UserDto> GetUserById(int userId) =>
         await _userService.GetUserByIdAsync(userId);
-    
 
-    //[HttpPost]
+
+    [HttpPost]
+    //[AuthentificationPermission(Permissions = "UserManagement")]
+    public async Task<int> AddUserAsync(UserDto user)
+    {
+        if (await _userService.IsUserExist(user.Login))
+            throw new Exception("Пользователь существует");
+
+        return await _userService.AddUserAsync(user);
+    }
+
+    [HttpGet("checkexists/{userLogin}")]
+    public async Task<bool> IsUserExist(string userLogin) =>
+        await _userService.IsUserExist(userLogin);
+
+    [HttpPut("{id}")]
     ////[AuthentificationPermission(Permissions = "UserManagement")]
-    //public async Task<UserDto> AddUserAsync(UserItem user, CancellationToken cancellationToken = default)
-    //{
-    //    //if (await _userService.IsUserExist(user.UserLogin))
-    //    //    throw new UserAlreadyExistException();
-
-    //    return await _userService.AddUserAsync(user, cancellationToken);
-    //}
-
-    //[HttpPut("{id}")]
-    ////[AuthentificationPermission(Permissions = "UserManagement")]
-    //public Task ChangeUserAsync(int id, [FromBody] UserChangeModel changes, CancellationToken cancellationToken = default)
-    //    => _userService.ChangeUserAsync(id, changes, cancellationToken);
+    public async Task<bool> UpdateUserAsync(UserDto user)
+      => await _userService.UpdateUserAsync(user);
 }
