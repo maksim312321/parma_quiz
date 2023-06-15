@@ -22,7 +22,7 @@
             <div class="quiz__question">
                 <h2 class="question__text">{{ currentQuestion.text }}</h2>
                 <div v-if="currentQuestion.isOpen">
-                    <input class="question__input" v-model="inputAnswer" type="type" name="name" value="" placeholder="Введите ответ..." />
+                    <input class="question__input" v-model="inputAnswer" placeholder="Введите ответ..." />
                 </div>
                 <div v-else class="question__answers">
                     <div v-for="answer in currentQuestion.answers"
@@ -58,7 +58,7 @@
         },
         computed: {
             currentProgress() {
-                return (this.currentQuestionIndex + 1) / this.questions.length * 100;
+                return (this.currentQuestionIndex) / this.questions.length * 100;
             },
         },
         watch: {
@@ -95,8 +95,7 @@
             },
             switchScreenToNextAnswer() {
                 if ((this.questions.length - 1) === this.currentQuestionIndex) {
-                    alert('Тестирование пройдено');
-                    this.$router.push('/')
+                    this.$router.push('/quiz_final');
                     return;
                 }
 

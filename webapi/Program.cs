@@ -13,6 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IDatabaseConnectionFactory, DatabaseConnectionFactory>();
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserAnswersService, UserAnswersService>();
+builder.Services.AddScoped<IAnswerService, AnswerService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddSwaggerGen();
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -20,12 +22,12 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
-    policy =>
-    {
-        policy.AllowAnyOrigin()
-    .AllowAnyHeader()
-    .AllowAnyMethod();
-    });
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                      });
 });
 
 var app = builder.Build();

@@ -26,5 +26,6 @@
 
     body {
         font-family: 'Montserrat';
+        --van-base-font: 'Montserrat';
     }
 </style>

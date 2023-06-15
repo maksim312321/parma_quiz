@@ -1,10 +1,15 @@
 ﻿<template>
     <header class="header">
-        <img src="../assets/parma_logo.svg" alt="parma_logo" />
+        <div class="header__left">
+            <router-link to="/">
+                <img src="../assets/parma_logo.svg" alt="parma_logo" />
+            </router-link>
+            <router-link to="/admin_main_page"><span>Панель администратора</span></router-link>
+        </div>
         <div class="header__user">
             {{userName}}
         </div>
-    </header>
+</header>
 </template>
 
 <script lang="js">
@@ -25,6 +30,16 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+
+    .header__left {
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+
+    .header__left span {
+        color: white!important;
     }
 
     .header__user {
