@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using System.Text;
@@ -76,16 +77,8 @@ public class UserService : IUserService
             })).FirstOrDefault(-1);
     }
 
-    public async Task<bool> IsUserExist(string userLogin)
-    {
-        var currentUser = (await _repository.QueryAsync<UserModel>(
-            sql: SqlFiles.GetUserByLogin,
-            param: new
-            {
-                UserLogin = userLogin
-            })).FirstOrDefault();
-        return currentUser is not null;
-    }
+    public async Task<bool> IsUserExist(string userLogin) =>
+        await GetUserByLogin(userLogin) is not null;
 
     public async Task<bool> UpdateUserAsync(UserDto user)
     {
@@ -101,5 +94,34 @@ public class UserService : IUserService
                 UserRoleId = (int)user.Role
             })).FirstOrDefault(-1);
         return userId == user.Id;
+    }
+
+    public async Task<UserDto> AuthorizeUserAsync(AuthorizeDto authorizeDto)
+    {
+        var currentUser = await GetUserByLogin(authorizeDto.Login);
+        if (currentUser is null)
+            return null;
+
+        if (!BCrypt.Net.BCrypt.Verify(authorizeDto.Password, currentUser.UserPassword))
+            return null;
+        return new UserDto
+        {
+            Id = currentUser.UserId,
+            Password = currentUser.UserPassword,
+            Login = currentUser.UserLogin,
+            Surname = currentUser.UserSurname,
+            Role = currentUser.RoleId,
+            Name = currentUser.UserName
+        };
+    }
+
+    private async Task<UserModel?> GetUserByLogin (string userLogin)
+    {
+        return (await _repository.QueryAsync<UserModel>(
+           sql: SqlFiles.GetUserByLogin,
+           param: new
+           {
+               UserLogin = userLogin
+           })).FirstOrDefault();
     }
 }

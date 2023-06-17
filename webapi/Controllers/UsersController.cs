@@ -27,6 +27,9 @@ public class UsersController : ControllerBase
     public async Task<UserDto> GetUserById(int userId) =>
         await _userService.GetUserByIdAsync(userId);
 
+    [HttpPost("authorize")]
+    public async Task<UserDto> AuthorizeUser(AuthorizeDto authorizeDto) =>
+        await _userService.AuthorizeUserAsync(authorizeDto);
 
     [HttpPost]
     //[AuthentificationPermission(Permissions = "UserManagement")]

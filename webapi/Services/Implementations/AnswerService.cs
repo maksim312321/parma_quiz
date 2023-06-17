@@ -37,7 +37,7 @@ public class AnswerService : IAnswerService
     public async Task<AnswerDto?> GetAnswerByIdAsync(int id)
     {
         var answerModel = (await _repository.QueryAsync<AnswerModel>(
-            sql: SqlFiles.GetAnswerByIds,
+            sql: SqlFiles.GetAnswersByIds,
             param: new
             {
                 AnswerIds =new int[] { id }
@@ -54,7 +54,7 @@ public class AnswerService : IAnswerService
     public async Task<List<AnswerDto>?> GetAnswerDtosAsync(IReadOnlyCollection<int> answerIds)
     {
         var answerModels = (await _repository.QueryAsync<AnswerModel>(
-            sql: SqlFiles.GetAnswerByIds,
+            sql: SqlFiles.GetAnswersByIds,
             param: new
             {
                 AnswerIds = answerIds

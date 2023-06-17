@@ -12,6 +12,7 @@ public class UserAnswersService : IUserAnswersService
     {
         _repository = repository;
     }
+
     public async Task<int> AddUserAnswerAsync(UserAnswerDto userAnswer)
     {
         return (await _repository.QueryAsync<int>(
@@ -20,9 +21,21 @@ public class UserAnswersService : IUserAnswersService
             {
                 userAnswer.UserAnswerText,
                 userAnswer.AnswerId,
-                userAnswer.UserId
+                userAnswer.UserId,
+                userAnswer.IsCorrect
             }
             )).FirstOrDefault();
+    }
+
+    public async Task CheckTheUserAnswerAsync(CheckUserAnswerDto dto)
+    {
+        await _repository.ExecuteAsync(
+            sql: SqlFiles.UpdateUserAnswer,
+            param: new
+            {
+                UserAnswerId = dto.UserAnswerId,
+                IsCorrect = dto.IsCorrect
+            });
     }
 
     public async Task<List<UserAnswerDto>?> GetAllUserAnswersByUserIdAsync(int userId)
@@ -39,7 +52,9 @@ public class UserAnswersService : IUserAnswersService
         {
             UserAnswerText = a.UserAnswerText,
             UserAnswerId = a.UserAnswerId,
-            AnswerId = a.AnswerId
+            AnswerId = a.AnswerId,
+            UserId = a.UserId,
+            IsCorrect = a.IsCorrect
         }).ToList();
     }
 }
