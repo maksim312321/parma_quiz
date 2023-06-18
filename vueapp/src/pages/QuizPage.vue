@@ -55,10 +55,27 @@
         },
         created() {
             this.fetchQuiz();
+            this.user = JSON.parse(window.getCookie('user'));
         },
         computed: {
             currentProgress() {
                 return (this.currentQuestionIndex) / this.questions.length * 100;
+            },
+            answerToSend() {
+                const answer = {
+                    "questionId": this.currentQuestion.id,
+                    "userId": this.user.id,
+                };
+
+                if (this.currentQuestion.isOpen) {
+                    answer["userAnswerText"] = this.inputAnswer;
+                } else {
+                    answer["userAnswerText"] = '';
+                    answer["answerId"] = this.selectedAnswer?.id
+                    answer["isCorrect"] = this.selectedAnswer?.id == this.currentQuestion?.correctAnswer?.id;
+                }
+
+                return answer;
             },
         },
         watch: {
@@ -72,26 +89,25 @@
                     this.selectedAnswer = answer;
                 }
             },
-            onAnswerBtnClick() {
+            async onAnswerBtnClick() {
                 if (this.currentQuestion.isOpen) {
                     if (this.inputAnswer === null) {
                         alert('Ответ пуст');
                         return;
                     }
-
-                    this.inputAnswer = null;
                 } else {
                     if (this.selectedAnswer === null) {
                         alert('Ответ не выбран');
                         return;
                     }
-
-                    this.selectedAnswer = null;
                 }
-
+                this.loading = true;
+                const result = await this.sendAnswer(this.answerToSend);
+                console.log(result)
+                this.loading = false;
+                this.inputAnswer = null;
+                this.selectedAnswer = null;
                 this.switchScreenToNextAnswer();
-
-                this.sendAnswer();
             },
             switchScreenToNextAnswer() {
                 if ((this.questions.length - 1) === this.currentQuestionIndex) {
@@ -102,8 +118,17 @@
                 this.currentQuestionIndex++;
                 this.currentQuestion = this.questions[this.currentQuestionIndex];
             },
-            sendAnswer() {
+            async sendAnswer(answer) {
+                let response = await fetch('https://localhost:7202/api/userAnswers', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(answer)
+                });
 
+                let result = await response.json();
+                return result;
             },
             fetchQuiz() {
                 this.loading = true; 
@@ -111,7 +136,6 @@
                     .then(response => response.json())
                     .then(response => {
                         this.loading = false;
-                        //this.questions = JSON.parse('[{"text":"Вам нужно закрыть практику в учебном заведении, нужно ли вам отправлять ваш отчет на проверку и кому?","id":1,"image":null,"correctAnswer":null,"answers":null,"isOpen":true,"difficult":0,"videoLink":null},{"text":"В каком мессенджере следует общаться по рабочим вопросам?","id":2,"image":null,"correctAnswer":{"id":3,"text":"Microsoft Teams"},"answers":[{"id":1,"text":"Viber"},{"id":2,"text":"Telegram"},{"id":3,"text":"Microsoft Teams"},{"id":4,"text":"Whats App"}],"isOpen":false,"difficult":0,"videoLink":null}]');
                         this.questions = response;
                         this.currentQuestion = this.questions[this.currentQuestionIndex];
                     });
