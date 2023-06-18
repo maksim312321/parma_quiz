@@ -1,6 +1,6 @@
 ﻿<template>
     <div>
-        <SiteHeader :user-name="userName"></SiteHeader>
+        <SiteHeader :user-name="user.name"></SiteHeader>
         <router-view></router-view>
     </div>
 </template>
@@ -15,7 +15,15 @@
         },
         data() {
             return {
-                userName: 'Иван Иванович',
+                user: null,
+            }
+        },
+        created() {
+            const userJson = window.getCookie('user');
+            if (userJson) {
+                this.user = JSON.parse(userJson);
+            } else {
+                this.user = 'Вы не авторизованы';
             }
         },
     }
