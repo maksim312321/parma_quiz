@@ -1,48 +1,54 @@
-create table roles (
-    role_id serial PRIMARY KEY,
-    role_name varchar not null
+CREATE TABLE answers (
+	answer_id serial4 NOT NULL,
+	answer_text varchar NULL,
+	CONSTRAINT answers_pkey PRIMARY KEY (answer_id)
 );
 
-create table difficults (
-    difficult_id serial PRIMARY KEY,
-    difficult varchar not null
+CREATE TABLE difficults (
+	difficult_id serial4 NOT NULL,
+	difficult varchar NOT NULL,
+	CONSTRAINT difficults_pkey PRIMARY KEY (difficult_id)
 );
 
-create table answers (
-    answer_id serial PRIMARY KEY,
-    answer_text varchar,
-    user_id int4 NOT NULL
+CREATE TABLE roles (
+	role_id serial4 NOT NULL,
+	role_name varchar NOT NULL,
+	CONSTRAINT roles_pkey PRIMARY KEY (role_id)
 );
 
-create table users (
-	user_id serial PRIMARY KEY,
-	user_password varchar not null,
-	user_name varchar not null,
-    user_surname varchar not null,
-    user_login varchar not null,
-    user_role_id integer not null,
+CREATE TABLE questions (
+	question_id serial4 NOT NULL,
+	question_text varchar NULL,
+	question_image bytea NULL,
+	question_correct_answer_id int4 NULL,
+	question_answer_ids _int4 NULL,
+	is_open bool NULL,
+	question_difficult_id int4 NULL,
+	question_video_link varchar NULL,
+	CONSTRAINT questions_pkey PRIMARY KEY (question_id),
+	CONSTRAINT question_correct_answer_id_fkey FOREIGN KEY (question_correct_answer_id) REFERENCES answers(answer_id),
+	CONSTRAINT question_difficult_id_fkey FOREIGN KEY (question_difficult_id) REFERENCES difficults(difficult_id)
+);
 
+CREATE TABLE users (
+	user_id serial4 NOT NULL,
+	user_password varchar NOT NULL,
+	user_name varchar NOT NULL,
+	user_surname varchar NOT NULL,
+	user_login varchar NOT NULL,
+	user_role_id int4 NOT NULL,
+	CONSTRAINT users_pkey PRIMARY KEY (user_id),
 	CONSTRAINT user_role_id_fkey FOREIGN KEY (user_role_id) REFERENCES roles(role_id)
 );
 
-create table questions (
-    question_id serial PRIMARY KEY,
-    question_text varchar,
-    question_image bytea,
-    question_correct_answer_id integer,
-    question_answer_ids integer[],
-    is_open boolean,
-    question_difficult_id integer,
-    question_video_link varchar,
-    CONSTRAINT question_difficult_id_fkey FOREIGN KEY (question_difficult_id) REFERENCES difficults(difficult_id),
-    CONSTRAINT question_correct_answer_id_fkey FOREIGN KEY (question_correct_answer_id) REFERENCES answers(answer_id)
-);
-
-create table user_answers (
-    user_answer_id serial PRIMARY KEY,
-    user_answer_text varchar,
-    answer_id integer,
-    CONSTRAINT answer_id_fkey FOREIGN KEY (answer_id) REFERENCES answers(answer_id),
+CREATE TABLE user_answers (
+	user_answer_id serial4 NOT NULL,
+	user_answer_text varchar NULL,
+	answer_id int4 NULL,
+	user_id int4 NOT NULL,
+	is_correct bool NOT NULL DEFAULT false,
+	CONSTRAINT user_answers_pkey PRIMARY KEY (user_answer_id),
+	CONSTRAINT answer_id_fkey FOREIGN KEY (answer_id) REFERENCES answers(answer_id),
 	CONSTRAINT user_answers_fk FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
@@ -65,7 +71,3 @@ INSERT INTO questions (question_text,
 INSERT INTO questions
 (question_id, question_text, question_image, question_correct_answer_id, question_answer_ids, is_open, question_difficult_id, question_video_link)
 VALUES(2, 'В каком мессенджере следует общаться по рабочим вопросам?', NULL, 3, '{1,2,3,4}', false, 1, NULL);
-
-ALTER TABLE user_answers ADD user_id int4 NOT NULL;
-ALTER TABLE user_answers ADD is_correct bool NOT null default false;
-ALTER TABLE user_answers ADD CONSTRAINT user_answers_fk FOREIGN KEY (user_id) REFERENCES users(user_id);
