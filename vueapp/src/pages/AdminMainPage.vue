@@ -15,48 +15,86 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users" :key="user.id">
+                        <tr @click="selectUser(user)" class="user__row" v-for="user in users" :key="user.id">
                             <td>
-                                {{ user.name}}
+                                {{ user.name}} {{ user.surname }}
                             </td>
                             <td>
-                                {{ user.score}}
+                                {{ user.correctAnswers }} / {{ questionsCount }}
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <ReviewAnswer :user="selectedUser"></ReviewAnswer>   
         </div>
     </div>
 </template>
 
 <script lang="js">
     import { defineComponent } from 'vue';
+    import ReviewAnswer from '../components/ReviewAnswer.vue';
 
     export default defineComponent({
+        components: {
+            ReviewAnswer,
+        },
         data() {
             return {
                 users: null,
+                questionsCount: null,
+                selectedUser: null,
             };
         },
         created() {
             this.fetchUsers();
         },
         methods: {
-            fetchUsers() {
-                this.users = [
-                    {
-                        id:1,
-                        name: 'Володя',
-                        score: 12,
-                    },
-                    {
-                        id:2,
-                        name: 'Петя',
-                        score: 42,
-                    },
-                ]
+            selectUser(user) {
+                console.log(user.name);
+                this.selectedUser = user;
             },
+            async fetchUsers() {
+                let res;
+                await fetch(`https://localhost:7202/api/users`)
+                    .then(response => response.json())
+                    .then(response => { res = response });
+                this.users = res;
+
+                this.fetchUsersScore()
+            },
+            async fetchUsersScore() {
+                let res;
+                await fetch('https://localhost:7202/question/all')
+                    .then(response => response.json())
+                    .then(response => { res = response });
+                this.questionsCount = res.length;
+
+
+                for (let user of this.users) {
+                    let userRes;
+                    try {
+                        await fetch(`https://localhost:7202/api/userAnswers/${user.id}`)
+                            .then(response => response.json())
+                            .then(response => { userRes = response });
+                    }
+                    catch (e) {
+                        console.log(`failed to load score ${user.name}`, e);
+                        continue;
+                    }
+
+                    user.correctAnswers = 0;
+                    user.reviewAnswers = 0;
+                    userRes.forEach(item => {
+                        if (item.isCorrect) {
+                            user.correctAnswers++;
+                        }
+                        if (item.isCorrect === null) {
+                            user.reviewAnswers++;
+                        }
+                    });
+                }
+            }
         },
     });
 </script>
@@ -80,4 +118,12 @@
     .admin-page__users-table table td {
         text-align: center;
     }
+
+    .user__row {
+        cursor: pointer;
+    }
+
+        .user__row:hover {
+            background: #dfdfdf;
+        }
 </style>

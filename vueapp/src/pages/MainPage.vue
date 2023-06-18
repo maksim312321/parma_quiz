@@ -57,7 +57,7 @@
                         .then(response => { res = response });
                 }
                 catch (e) {
-
+                    console.log(e);
                 }
 
                 this.resultsInfo.correctAnswers = 0;
