@@ -129,13 +129,15 @@ namespace webapi.Infrastructure {
         ///   Ищет локализованную строку, похожую на INSERT INTO user_answers(
         ///    user_answer_text,
         ///    answer_id,
-        ///    user_id
+        ///    user_id,
+        ///    is_correct
         ///) 
         ///VALUES 
         ///  (
         ///    @UserAnswerText,
         ///    @AnswerId,
-        ///    @UserId
+        ///    @UserId,
+        ///    @IsCorrect
         ///  )
         ///  RETURNING user_answer_id.
         /// </summary>
@@ -204,7 +206,8 @@ namespace webapi.Infrastructure {
         ///   Ищет локализованную строку, похожую на SELECT u.user_answer_id as UserAnswerId,
         ///                        u.user_answer_text as UserAnswerText,
         ///                        u.answer_id as AnswerId,
-        ///                        u.user_id as UserId
+        ///                        u.user_id as UserId,
+        ///                        u.is_correct as IsCorrect
         ///                        from user_answers u where u.user_id = @UserId.
         /// </summary>
         internal static string GetAllUserAnswersByUserId {
@@ -287,6 +290,19 @@ namespace webapi.Infrastructure {
         internal static string GetUserByLogin {
             get {
                 return ResourceManager.GetString("GetUserByLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на UPDATE user_answers
+        ///SET
+        ///is_correct=@IsCorrect
+        ///WHERE user_answer_id=@UserAnswerId
+        ///.
+        /// </summary>
+        internal static string UpdateUserAnswer {
+            get {
+                return ResourceManager.GetString("UpdateUserAnswer", resourceCulture);
             }
         }
         

@@ -14,6 +14,8 @@ public interface IUserService
 
     Task<bool> UpdateUserAsync(UserDto user);
 
+    Task<UserDto> AuthorizeUserAsync(AuthorizeDto authorizeDto);
+
     //Task<IReadOnlyCollection<string>> GetUserPermissionsByIdAsync(
     //    int id,
     //    CancellationToken cancellationToken = default);

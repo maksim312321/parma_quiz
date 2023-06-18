@@ -67,4 +67,5 @@ INSERT INTO questions
 VALUES(2, 'В каком мессенджере следует общаться по рабочим вопросам?', NULL, 3, '{1,2,3,4}', false, 1, NULL);
 
 ALTER TABLE user_answers ADD user_id int4 NOT NULL;
+ALTER TABLE user_answers ADD is_correct bool NOT null default false;
 ALTER TABLE user_answers ADD CONSTRAINT user_answers_fk FOREIGN KEY (user_id) REFERENCES users(user_id);

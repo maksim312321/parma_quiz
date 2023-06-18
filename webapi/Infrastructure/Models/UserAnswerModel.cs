@@ -9,4 +9,6 @@ public class UserAnswerModel
     public int? AnswerId { get; set; }
 
     public int UserId { get; set; }
+
+    public bool IsCorrect { get; set; }
 }

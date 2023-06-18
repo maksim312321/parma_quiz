@@ -24,4 +24,8 @@ public class UserAnswersController : ControllerBase
     [HttpPost]
     public async Task<int> AddNewUserAnswer(UserAnswerDto userAnswer)
         => await _userAnswersService.AddUserAnswerAsync(userAnswer);
+
+    [HttpPost("check")]
+    public async Task CheckTheUserAnswerAsync(CheckUserAnswerDto checkUserAnswerDto) =>
+        await _userAnswersService.CheckTheUserAnswerAsync(checkUserAnswerDto);
 }
