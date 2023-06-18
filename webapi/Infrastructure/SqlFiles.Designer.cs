@@ -286,7 +286,8 @@ namespace webapi.Infrastructure {
         ///                        u.user_id as UserId,
         ///                        u.is_correct as IsCorrect,
         ///                        u.question_id as QuestionId
-        ///                        from user_answers u where u.question_id = @QuestionId.
+        ///                        from user_answers u where u.question_id = @QuestionId 
+        ///                                            and u.user_id = @UserId.
         /// </summary>
         internal static string GetUserAnswerByQuestionId {
             get {

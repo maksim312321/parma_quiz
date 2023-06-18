@@ -19,7 +19,8 @@ public class UserAnswersService : IUserAnswersService
             sql: SqlFiles.GetUserAnswerByQuestionId,
             param: new
             {
-                userAnswer.QuestionId
+                userAnswer.QuestionId,
+                userAnswer.UserId
             })).FirstOrDefault();
         if (existedUserAnswer is not null) 
         { 
