@@ -15,12 +15,12 @@ public class UserAnswersService : IUserAnswersService
 
     public async Task<int> AddUserAnswerAsync(UserAnswerDto userAnswer)
     {
-        var existedUserAnswer = await _repository.QueryAsync<UserAnswerModel>(
+        var existedUserAnswer = (await _repository.QueryAsync<UserAnswerModel>(
             sql: SqlFiles.GetUserAnswerByQuestionId,
             param: new
             {
                 userAnswer.QuestionId
-            });
+            })).FirstOrDefault();
         if (existedUserAnswer is not null) 
         { 
             return (await _repository.QueryAsync<int>(
@@ -29,7 +29,8 @@ public class UserAnswersService : IUserAnswersService
             {
                 userAnswer.UserAnswerText,
                 userAnswer.AnswerId,
-                userAnswer.IsCorrect
+                userAnswer.IsCorrect,
+                existedUserAnswer.UserAnswerId
             }
             )).FirstOrDefault();
         }

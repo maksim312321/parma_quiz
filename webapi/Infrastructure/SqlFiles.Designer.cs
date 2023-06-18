@@ -327,10 +327,10 @@ namespace webapi.Infrastructure {
         /// <summary>
         ///   Ищет локализованную строку, похожую на UPDATE user_answers
         ///SET
-        ///is_correct=@IsCorrect,
-        ///user_answer_text=@UserAnswerText,
+        ///is_correct = @IsCorrect,
+        ///user_answer_text = @UserAnswerText,
         ///answer_id = @AnswerId
-        ///WHERE user_answer_id=@UserAnswerId
+        ///WHERE user_answer_id = @UserAnswerId
         ///.
         /// </summary>
         internal static string UpdateUserAnswer {
