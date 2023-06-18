@@ -4,10 +4,10 @@
             <router-link to="/">
                 <img src="../assets/parma_logo.svg" alt="parma_logo" />
             </router-link>
-            <router-link to="/admin_main_page"><span>Панель администратора</span></router-link>
+            <router-link v-if="isAdmin" to="/admin_main_page"><span>Панель администратора</span></router-link>
         </div>
-        <div class="header__user">
-            {{userName}}
+        <div v-if="user.name" class="header__user">
+            {{user.name}} <u @click="logout">выйти</u>
         </div>
 </header>
 </template>
@@ -17,8 +17,19 @@
 
     export default defineComponent({
         props: {
-            userName: String,
+            user: Object,
         },
+        computed: {
+            isAdmin() {
+                return this.user.role == '2';
+            }
+        },
+        methods: {
+            logout() {
+                document.cookie = 'user=';
+                this.$router.push('/login');
+            }
+        }
     });
 </script>
 
@@ -47,5 +58,9 @@
         font-weight: 600;
         font-size: 28px;
         margin-right: 30px;
+    }
+
+    .header__user u {
+        font-size: 18px;
     }
 </style>

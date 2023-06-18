@@ -8,6 +8,7 @@ import AuthPage from '../pages/AuthPage.vue';
 const routes = [
     {
         path: '/',
+        name: 'main',
         component: MainPage,
     },
     {
@@ -20,7 +21,21 @@ const routes = [
     },
     {
         path: '/admin_main_page',
+        name: 'admin_main_page',
         component: AdminMainPage,
+        beforeEnter(to, from, next) {
+            const isAuthenticated = !!window.getCookie('user');
+            if (isAuthenticated) {
+                const user = JSON.parse(window.getCookie('user'));
+                if (user.role == '2') {
+                    next()
+                } else {
+                    next({ name: 'main' })
+                }
+            } else {
+                next({ name: 'login' })
+            }
+        }
     },
     {
         path: '/login',

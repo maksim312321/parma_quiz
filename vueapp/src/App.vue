@@ -1,6 +1,6 @@
 ﻿<template>
     <div>
-        <SiteHeader :user-name="user.name"></SiteHeader>
+        <SiteHeader :user="user"></SiteHeader>
         <router-view></router-view>
     </div>
 </template>
@@ -18,12 +18,22 @@
                 user: null,
             }
         },
+        watch: {
+            $route() {
+                const userJson = window.getCookie('user');
+                if (userJson) {
+                    this.user = JSON.parse(userJson);
+                } else {
+                    this.user = 'Вы не авторизованы';
+                }
+            }
+        }, 
         created() {
             const userJson = window.getCookie('user');
             if (userJson) {
                 this.user = JSON.parse(userJson);
             } else {
-                this.user = 'Вы не авторизованы';
+                this.user = {};
             }
         },
     }
