@@ -41,7 +41,8 @@ public class UserAnswersService : IUserAnswersService
                 userAnswer.UserAnswerText,
                 userAnswer.AnswerId,
                 userAnswer.UserId,
-                userAnswer.IsCorrect
+                userAnswer.IsCorrect,
+                userAnswer.QuestionId
             }
             )).FirstOrDefault();
     }

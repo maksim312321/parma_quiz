@@ -130,14 +130,16 @@ namespace webapi.Infrastructure {
         ///    user_answer_text,
         ///    answer_id,
         ///    user_id,
-        ///    is_correct
+        ///    is_correct,
+        ///    question_id
         ///) 
         ///VALUES 
         ///  (
         ///    @UserAnswerText,
         ///    @AnswerId,
         ///    @UserId,
-        ///    @IsCorrect
+        ///    @IsCorrect,
+        ///    @QuestionId
         ///  )
         ///  RETURNING user_answer_id.
         /// </summary>
@@ -330,8 +332,7 @@ namespace webapi.Infrastructure {
         ///is_correct = @IsCorrect,
         ///user_answer_text = @UserAnswerText,
         ///answer_id = @AnswerId
-        ///WHERE user_answer_id = @UserAnswerId
-        ///.
+        ///WHERE user_answer_id = @UserAnswerId.
         /// </summary>
         internal static string UpdateUserAnswer {
             get {
