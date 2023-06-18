@@ -5,8 +5,8 @@
             <input class="auth__input" v-model="password" type="password" placeholder="Пароль"/>
             <van-button @click="auth" class="auth__btn" color="#EC1C24" width="100px" type="primary">Войти</van-button>
         </form>
-        <div v-else>
-            <van-loading class="loader" size="100px" type="spinner" color="#EC1C24" />
+        <div v-else class="loader">
+            <van-loading size="100px" type="spinner" color="#EC1C24" />
         </div>
     </div>
 </template>
@@ -73,6 +73,7 @@
     }
 
     .loader {
+        max-width: min-content;
         margin: 0 auto;
     }
 </style>

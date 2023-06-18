@@ -51,9 +51,14 @@
                     .then(response => { res = response });
                 this.questionsCount = res.length;
 
-                await fetch(`https://localhost:7202/api/userAnswers/${user.id}`)
-                    .then(response => response.json())
-                    .then(response => { res = response });
+                try {
+                    await fetch(`https://localhost:7202/api/userAnswers/${user.id}`)
+                        .then(response => response.json())
+                        .then(response => { res = response });
+                }
+                catch (e) {
+
+                }
 
                 this.resultsInfo.correctAnswers = 0;
                 this.resultsInfo.reviewAnswers = 0;
