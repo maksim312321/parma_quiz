@@ -26,7 +26,10 @@
                     </tbody>
                 </table>
             </div>
-            <ReviewAnswer :user="selectedUser"></ReviewAnswer>   
+            <div></div>
+            <div class="review__window">
+                <ReviewAnswer :questions="questions" :user="selectedUser"></ReviewAnswer>
+            </div>
         </div>
     </div>
 </template>
@@ -68,6 +71,7 @@
                 await fetch('https://localhost:7202/question/all')
                     .then(response => response.json())
                     .then(response => { res = response });
+                this.questions = res;
                 this.questionsCount = res.length;
 
 
@@ -126,4 +130,7 @@
         .user__row:hover {
             background: #dfdfdf;
         }
+    .review__window {
+        margin-top: 30px;
+    }
 </style>
