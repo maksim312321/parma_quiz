@@ -10,5 +10,7 @@ public class UserAnswerDto
 
     public int UserId { get; set; }
 
-    public bool IsCorrect { get; set; }
+    public bool? IsCorrect { get; set; }
+
+    public int QuestionId { get; set; }
 }

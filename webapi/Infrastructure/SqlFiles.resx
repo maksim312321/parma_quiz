@@ -157,6 +157,12 @@
   <data name="GetQuestionById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>SQL\GetQuestionById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="GetUserAnswerById" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>SQL\GetUserAnswerById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="GetUserAnswerByQuestionId" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>SQL\GetUserAnswerByQuestionId.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
   <data name="GetUserById" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>SQL\GetUserById.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>

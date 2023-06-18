@@ -207,7 +207,8 @@ namespace webapi.Infrastructure {
         ///                        u.user_answer_text as UserAnswerText,
         ///                        u.answer_id as AnswerId,
         ///                        u.user_id as UserId,
-        ///                        u.is_correct as IsCorrect
+        ///                        u.is_correct as IsCorrect,
+        ///                        u.question_id as QuestionId
         ///                        from user_answers u where u.user_id = @UserId.
         /// </summary>
         internal static string GetAllUserAnswersByUserId {
@@ -262,6 +263,36 @@ namespace webapi.Infrastructure {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT u.user_answer_id as UserAnswerId,
+        ///                        u.user_answer_text as UserAnswerText,
+        ///                        u.answer_id as AnswerId,
+        ///                        u.user_id as UserId,
+        ///                        u.is_correct as IsCorrect,
+        ///                        u.question_id as QuestionId
+        ///                        from user_answers u where u.user_answer_id = @UserAnswerId.
+        /// </summary>
+        internal static string GetUserAnswerById {
+            get {
+                return ResourceManager.GetString("GetUserAnswerById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SELECT u.user_answer_id as UserAnswerId,
+        ///                        u.user_answer_text as UserAnswerText,
+        ///                        u.answer_id as AnswerId,
+        ///                        u.user_id as UserId,
+        ///                        u.is_correct as IsCorrect,
+        ///                        u.question_id as QuestionId
+        ///                        from user_answers u where u.question_id = @QuestionId.
+        /// </summary>
+        internal static string GetUserAnswerByQuestionId {
+            get {
+                return ResourceManager.GetString("GetUserAnswerByQuestionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на select u.user_id as UserId,
         ///											u.user_password as UserPassword,
         ///										   	u.user_name as UserName,
@@ -296,8 +327,10 @@ namespace webapi.Infrastructure {
         /// <summary>
         ///   Ищет локализованную строку, похожую на UPDATE user_answers
         ///SET
-        ///is_correct=@IsCorrect
-        ///WHERE user_answer_id=@UserAnswerId
+        ///is_correct = @IsCorrect,
+        ///user_answer_text = @UserAnswerText,
+        ///answer_id = @AnswerId
+        ///WHERE user_answer_id = @UserAnswerId
         ///.
         /// </summary>
         internal static string UpdateUserAnswer {
