@@ -51,7 +51,7 @@ CREATE TABLE user_answers (
 	CONSTRAINT user_answers_pkey PRIMARY KEY (user_answer_id),
 	CONSTRAINT answer_id_fkey FOREIGN KEY (answer_id) REFERENCES answers(answer_id),
     CONSTRAINT questions_fk FOREIGN KEY (question_id) REFERENCES questions(question_id),
-	CONSTRAINT user_answers_fk FOREIGN KEY (user_id) REFERENCES users(user_id)
+	CONSTRAINT users_fk FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 INSERT INTO roles (role_id, role_name) VALUES(1, 'User');
