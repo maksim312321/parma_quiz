@@ -15,6 +15,24 @@ public class UserAnswersService : IUserAnswersService
 
     public async Task<int> AddUserAnswerAsync(UserAnswerDto userAnswer)
     {
+        var existedUserAnswer = await _repository.QueryAsync<UserAnswerModel>(
+            sql: SqlFiles.GetUserAnswerByQuestionId,
+            param: new
+            {
+                userAnswer.QuestionId
+            });
+        if (existedUserAnswer is not null) 
+        { 
+            return (await _repository.QueryAsync<int>(
+            sql: SqlFiles.UpdateUserAnswer,
+            param: new
+            {
+                userAnswer.UserAnswerText,
+                userAnswer.AnswerId,
+                userAnswer.IsCorrect
+            }
+            )).FirstOrDefault();
+        }
         return (await _repository.QueryAsync<int>(
             sql: SqlFiles.AddNewUserAnswer,
             param: new
@@ -29,12 +47,22 @@ public class UserAnswersService : IUserAnswersService
 
     public async Task CheckTheUserAnswerAsync(CheckUserAnswerDto dto)
     {
+        var existedUserAnswer = (await _repository.QueryAsync<UserAnswerModel>(
+            sql: SqlFiles.GetUserAnswerById,
+            param: new
+            {
+                dto.UserAnswerId
+            })).FirstOrDefault();
+        if (existedUserAnswer is null)
+            return;
         await _repository.ExecuteAsync(
             sql: SqlFiles.UpdateUserAnswer,
             param: new
             {
-                UserAnswerId = dto.UserAnswerId,
-                IsCorrect = dto.IsCorrect
+                dto.UserAnswerId,
+                dto.IsCorrect,
+                existedUserAnswer.UserAnswerText,
+                existedUserAnswer.AnswerId
             });
     }
 
@@ -54,7 +82,8 @@ public class UserAnswersService : IUserAnswersService
             UserAnswerId = a.UserAnswerId,
             AnswerId = a.AnswerId,
             UserId = a.UserId,
-            IsCorrect = a.IsCorrect
+            IsCorrect = a.IsCorrect,
+            QuestionId = a.QuestionId
         }).ToList();
     }
 }

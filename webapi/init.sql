@@ -46,9 +46,11 @@ CREATE TABLE user_answers (
 	user_answer_text varchar NULL,
 	answer_id int4 NULL,
 	user_id int4 NOT NULL,
-	is_correct bool NOT NULL DEFAULT false,
+	is_correct bool NULL,
+    question_id int4 NOT NULL,
 	CONSTRAINT user_answers_pkey PRIMARY KEY (user_answer_id),
 	CONSTRAINT answer_id_fkey FOREIGN KEY (answer_id) REFERENCES answers(answer_id),
+    CONSTRAINT questions_fk FOREIGN KEY (question_id) REFERENCES questions(question_id),
 	CONSTRAINT user_answers_fk FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
