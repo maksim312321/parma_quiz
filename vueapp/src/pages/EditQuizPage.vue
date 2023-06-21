@@ -40,7 +40,7 @@
                 </div>
 
                 <span v-if="!newQuestion.isOpen">Правильный ответ:</span>
-                <select v-if="!newQuestion.isOpen" v-model="newQuestion.correctAnswer">
+                <select v-if="!newQuestion.isOpen" @change="onChangeSelect" v-model="selectedAnswer">
                     <option v-for="answer in newQuestion.answers" :key="answer.id" :value="answer">{{ answer.text }}</option>
                 </select>
 
@@ -79,24 +79,28 @@
                     answers: [
                         {
                             id: 1,
+                            isCorrect: false,
                             text: 'Вариант 1',
                         },
                         {
                             id: 2,
+                            isCorrect: false,
                             text: 'Вариант 2',
                         },
                         {
                             id: 3,
+                            isCorrect: false,
                             text: 'Вариант 3',
                         },
                         {
                             id: 4,
+                            isCorrect: false,
                             text: 'Вариант 4',
                         },
  
                     ],
-                    correctAnswer: null,
                 },
+                selectedAnswer: null,
                 newUser: {
                     "name": null,
                     "password": null,
@@ -133,18 +137,34 @@
                 }
             },
             deleteQuestion(itemForDel) {
-                //fetch('https://localhost:7202/question/' + itemForDel.id, {
-                //    method: 'DELETE',
-                //})
+                fetch('https://localhost:7202/question/' + itemForDel.id, {
+                    method: 'DELETE',
+                })
                 this.questions = this.questions.filter(item => {
                     return JSON.stringify(item) !== JSON.stringify(itemForDel)
                 });
             },
-            addAnswer() {
-                if (this.newQuestion.text === null || (this.newQuestion.isOpen == false && this.newQuestion.correctAnswer === null)) {
+            async addAnswer() {
+                if (this.newQuestion.text === null || (this.newQuestion.isOpen == false)) {
                     alert('Заполните поля формы');
                     return;
                 }
+                let answer = {
+                    "text": this.newQuestion.text,
+                    "isOpen": this.newQuestion.isOpen,
+                    "difficult": this.newQuestion.difficult,
+                };
+
+                let response = await fetch('https://localhost:7202/question', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(answer)
+                });
+                let result = await response.json();
+                console.log(result)
+                this.newQuestion.id = result;
                 this.questions.push(Object.assign({}, this.newQuestion));
             },
             setTab(tab) {
@@ -162,7 +182,16 @@
                 let result = await response.json();
                 console.log(result)
                 alert('Пользователь добавлен');
-            }
+            },
+            onChangeSelect() {
+                this.newQuestion.answers.forEach(item => {
+                    if (item.id === this.selectedAnswer.id) {
+                        item.isCorrect = true;
+                    } else {
+                        item.isCorrect = false;
+                    }
+                });
+            },
         }
     });
 </script>
