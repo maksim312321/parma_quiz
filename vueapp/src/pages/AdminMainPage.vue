@@ -19,7 +19,7 @@
                             <td>
                                 {{ user.name}} {{ user.surname }}
                             </td>
-                            <td>
+                            <td v-if="user.correctAnswers && questionsCount">
                                 {{ user.correctAnswers }} / {{ questionsCount }}
                             </td>
                         </tr>
@@ -62,7 +62,8 @@
                 await fetch(`https://localhost:7202/api/users`)
                     .then(response => response.json())
                     .then(response => { res = response });
-                this.users = res;
+
+                this.users = res;//.filter(item => { return item.role == 1 });
 
                 this.fetchUsersScore()
             },
