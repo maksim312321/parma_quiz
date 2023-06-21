@@ -85,10 +85,11 @@ public class QuestionService : IQuestionService
 
     public async Task<int> AddQuestionAsync(QuestionDto question)
     {
-        var answerIds = new List<int>();
-        var correctAnswerId = 0;
+        List<int> answerIds = null;
+        int? correctAnswerId = null;
         if (!question.IsOpen && question.Answers is not null && question.CorrectAnswer is not null)
         {
+            answerIds = new List<int>();
             foreach (var answerDto in question.Answers)
             {
                 var answer = _answerService.GetAnswerByIdAsync(answerDto.Id);
