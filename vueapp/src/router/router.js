@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import QuizPage from '../pages/QuizPage.vue';
 import QuizFinalPage from '../pages/QuizFinalPage.vue';
 import AdminMainPage from '../pages/AdminMainPage.vue';
+import EditQuizPage from '../pages/EditQuizPage.vue';
 import AuthPage from '../pages/AuthPage.vue';
 
 const routes = [
@@ -23,6 +24,24 @@ const routes = [
         path: '/admin_main_page',
         name: 'admin_main_page',
         component: AdminMainPage,
+        beforeEnter(to, from, next) {
+            const isAuthenticated = !!window.getCookie('user');
+            if (isAuthenticated) {
+                const user = JSON.parse(window.getCookie('user'));
+                if (user.role == '2') {
+                    next()
+                } else {
+                    next({ name: 'main' })
+                }
+            } else {
+                next({ name: 'login' })
+            }
+        }
+    },
+    {
+        path: '/edit_quiz_page',
+        name: 'edit_quiz_page',
+        component: EditQuizPage,
         beforeEnter(to, from, next) {
             const isAuthenticated = !!window.getCookie('user');
             if (isAuthenticated) {

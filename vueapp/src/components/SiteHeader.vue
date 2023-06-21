@@ -4,7 +4,8 @@
             <router-link to="/">
                 <img src="../assets/parma_logo.svg" alt="parma_logo" />
             </router-link>
-            <router-link v-if="isAdmin" to="/admin_main_page"><span>Панель администратора</span></router-link>
+            <router-link v-if="isAdmin" to="/admin_main_page"><span class="menu__link">Проверка ответов</span></router-link>
+            <router-link v-if="isAdmin" to="/edit_quiz_page"><span class="menu__link">Панель администратора</span></router-link>
         </div>
         <div v-if="user.name" class="header__user">
             {{user.name}} <u @click="logout">выйти</u>
@@ -62,5 +63,9 @@
 
     .header__user u {
         font-size: 18px;
+    }
+
+    .menu__link {
+        margin-right: 20px;
     }
 </style>

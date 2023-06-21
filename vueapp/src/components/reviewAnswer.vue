@@ -1,7 +1,6 @@
 <template>
     <div v-if="user">
-        <h1>Преверка открытых вопросов</h1>
-        <div>{{ user.name }}</div>
+        <h2>Преверка открытых вопросов, пользователь: <u>{{ user.name }} {{ user.surname }}</u> </h2>
         <div v-for="answer in userAnswers" :key="answer.userAnswerId">
             <div class="wrap" v-if="answer && answer.userAnswerText !== ''">
                 <div><b>{{ questionText(answer.questionId) }}</b></div>
