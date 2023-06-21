@@ -101,12 +101,9 @@ public class QuestionService : IQuestionService
 
                 var answerId = await _answerService.AddAnswerAsync(answerDto);
                 answerIds.Add(answerId);
+                if (answerDto.IsCorrect)
+                    correctAnswerId = answerId;
             }
-           
-            if (await _answerService.GetAnswerByIdAsync(question.CorrectAnswer.Id) is not null)
-                correctAnswerId = question.CorrectAnswer.Id;
-            else
-                correctAnswerId = await _answerService.AddAnswerAsync(question.CorrectAnswer);
         }
 
         return (await _repository.QueryAsync<int>(
