@@ -87,12 +87,12 @@ public class QuestionService : IQuestionService
     {
         List<int> answerIds = null;
         int? correctAnswerId = null;
-        if (!question.IsOpen && question.Answers is not null && question.CorrectAnswer is not null)
+        if (!question.IsOpen && question.Answers is not null)
         {
             answerIds = new List<int>();
             foreach (var answerDto in question.Answers)
             {
-                var answer = _answerService.GetAnswerByIdAsync(answerDto.Id);
+                var answer = await _answerService.GetAnswerByIdAsync(answerDto.Id);
                 if (answer is not null)
                 {
                     answerIds.Add(answer.Id);
