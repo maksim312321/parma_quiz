@@ -145,15 +145,25 @@
                 });
             },
             async addAnswer() {
-                if (this.newQuestion.text === null || (this.newQuestion.isOpen == false)) {
+                if (this.newQuestion.text === null) {
                     alert('Заполните поля формы');
                     return;
                 }
-                let answer = {
+
+                const answer = {
                     "text": this.newQuestion.text,
                     "isOpen": this.newQuestion.isOpen,
                     "difficult": this.newQuestion.difficult,
                 };
+
+                if (!this.newQuestion.isOpen) {
+                    answer["answers"] = this.newQuestion.answers.map(item => {
+                        return {
+                            'isCorrect': item.isCorrect,
+                            'text': item.text,
+                        }
+                    })
+                }
 
                 let response = await fetch('https://localhost:7202/question', {
                     method: 'POST',
@@ -284,5 +294,6 @@
         padding: 20px 50px;
         border: 1px solid grey;
         border-radius: 15px;
+        max-height: 80vh;
     }
 </style>

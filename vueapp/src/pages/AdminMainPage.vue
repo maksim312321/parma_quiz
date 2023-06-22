@@ -22,6 +22,7 @@
                             <td v-if="user.correctAnswers && questionsCount">
                                 {{ user.correctAnswers }} / {{ questionsCount }}
                             </td>
+                            <td v-else>Не пройден</td>
                         </tr>
                     </tbody>
                 </table>
@@ -63,7 +64,7 @@
                     .then(response => response.json())
                     .then(response => { res = response });
 
-                this.users = res;//.filter(item => { return item.role == 1 });
+                this.users = res.filter(item => { return item.role == 1 });
 
                 this.fetchUsersScore()
             },

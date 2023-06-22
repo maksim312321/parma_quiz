@@ -8,7 +8,7 @@
             <router-link v-if="isAdmin" to="/edit_quiz_page"><span class="menu__link">Панель администратора</span></router-link>
         </div>
         <div v-if="user.name" class="header__user">
-            {{user.name}} <u @click="logout">выйти</u>
+            <span>{{user.name}}</span> <img @click="logout" class="header__user-img" style="width:30px;" src="../assets/exit-svgrepo-com.svg" alt="Alternate Text" />
         </div>
 </header>
 </template>
@@ -55,6 +55,8 @@
     }
 
     .header__user {
+        display: flex;
+        align-items: center;
         font-style: normal;
         font-weight: 600;
         font-size: 28px;
@@ -67,5 +69,10 @@
 
     .menu__link {
         margin-right: 20px;
+    }
+
+    .header__user-img {
+        margin: 0 0 0 10px;
+        cursor: pointer;
     }
 </style>

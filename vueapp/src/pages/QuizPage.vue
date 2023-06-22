@@ -91,7 +91,7 @@
             },
             async onAnswerBtnClick() {
                 if (this.currentQuestion.isOpen) {
-                    if (this.inputAnswer === null) {
+                    if (this.inputAnswer === null || this.inputAnswer === "" || this.inputAnswer === " ") {
                         alert('Ответ пуст');
                         return;
                     }
@@ -204,7 +204,7 @@
         border-radius: 50px;
         width: 40%;
         margin: 0 auto;
-        padding: 10px 0;
+        padding: 10px 15px;
         height: fit-content;
     }
 

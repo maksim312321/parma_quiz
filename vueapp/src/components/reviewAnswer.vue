@@ -95,6 +95,6 @@
         padding: 20px;
         background: rgba(217, 217, 217, 0.2);
         border: 3px solid #0F2232;
-        border-radius: 50px;
+        border-radius: 10px;
     }
 </style>
